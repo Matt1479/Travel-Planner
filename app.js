@@ -38,7 +38,16 @@ function openModal(event) {
     if (event.currentTarget.dataset.date) {
         document.getElementById('date').value = event.currentTarget.dataset.date;
     } else {
-        // ...
+        const id = event.currentTarget.dataset.id;
+        const trip = store.getState().trips.find((t) => t.id === id);
+
+        // Update trip form
+        document.querySelector('input[type="hidden"]').dataset.id = id;
+        document.getElementById('date').value = trip.date;
+        document.querySelector('#country').value = trip.country;
+        document.getElementById('city').value = trip.city;
+        document.querySelector('#cost').value = trip.cost;
+        document.querySelector('#weather').value = trip.weather;
     }
     
     modal.show();
@@ -49,8 +58,9 @@ tripForm.addEventListener('submit', function(event) {
     // Prevent default behavior (don't submit the form to the server)
     event.preventDefault();
 
+    const id = document.querySelector('input[type="hidden"]').dataset.id;
     const trip = {
-        id: crypto.randomUUID(),
+        id: id ? id : crypto.randomUUID(),
         date: document.getElementById('date').value,
         country: document.querySelector('#country').value,
         city: document.getElementById('city').value,
