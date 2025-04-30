@@ -71,13 +71,16 @@ tripForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
     const id = document.querySelector('input[type="hidden"]').dataset.id;
+    const backgroundColor = store.getState().trips.find((trip) => trip.id === id)?.backgroundColor;
+    
     const trip = {
         id: id ? id : crypto.randomUUID(),
         date: document.getElementById('date').value,
         country: document.querySelector('#country').value,
         city: document.getElementById('city').value,
         cost: parseFloat(document.querySelector('#cost').value),
-        weather: document.querySelector('#weather').value
+        weather: document.querySelector('#weather').value,
+        backgroundColor: backgroundColor ? backgroundColor : getRandomColorHex()
     };
 
     store.dispatch(addTripAction(trip));
@@ -117,7 +120,7 @@ function updateUI() {
             tripBox.dataset.id = trip.id;
 
             tripBox.innerHTML = `
-            <div class="card" style="background-color: ${getRandomColorHex()}">
+            <div class="card" style="background-color: ${trip.backgroundColor}">
                 <div class="card-body">
                     <h6 class="card-title mb-3">${trip.city}</h6>
                     <p>Country: ${trip.country}</p>

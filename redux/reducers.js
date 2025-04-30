@@ -74,6 +74,14 @@ let initialTrips = [
 initialTrips = initialTrips.map((t, index) => {
     t.id = crypto.randomUUID();
     t.cost = 100 + Math.floor(Math.random() * 500) + index * 50;
+    
+    // Could use getRandomColorHex here...
+    const limit = Math.pow(2, 24);
+    do {
+        t.backgroundColor = Math.floor(Math.random() * limit);
+    }
+    while (t.backgroundColor < (limit / 1.5));
+    t.backgroundColor = '#' + t.backgroundColor.toString(16);
 
     return t;
 });
