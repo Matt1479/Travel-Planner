@@ -20,9 +20,19 @@ function tripReducer(state=initialState, action) {
             const totalCost = updatedTrips.reduce((sum, trip) => sum + trip.cost, 0);
             
             return {
+                ...state,
                 trips: updatedTrips,
                 totalCost: totalCost
             };
+        
+        case REMOVE_TRIP:
+            let trips = state.trips.filter((t) => t.id !== action.payload);
+
+            return {
+                ...state,
+                trips: trips,
+                totalCost: trips.reduce((sum, trip) => sum + trip.cost, 0)
+            }
         
         default:
             return state;

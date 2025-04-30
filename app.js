@@ -1,6 +1,7 @@
 const calendar = document.querySelector('div#calendar');
 const modal = new bootstrap.Modal(document.getElementById('tripModal'));
 const tripForm = document.querySelector('form#tripForm');
+const deleteBtn = document.querySelector('button#delete');
 
 document.getElementById('tripModal')
 .addEventListener('hidden.bs.modal', () => {
@@ -29,27 +30,35 @@ function generateCalendar() {
         div.addEventListener('click', openModal);
         calendar.appendChild(div);
     }
+
+    updateUI();
 }
 
 function openModal(event) {
     // Prevent the trigger of click event by the parent element
     event.stopPropagation();
 
+    // If adding a new trip
     if (event.currentTarget.dataset.date) {
         document.getElementById('date').value = event.currentTarget.dataset.date;
+
+        deleteBtn.hidden = true;
     } else {
         const id = event.currentTarget.dataset.id;
         const trip = store.getState().trips.find((t) => t.id === id);
 
         // Update trip form
-        document.querySelector('input[type="hidden"]').dataset.id = id;
+        document.querySelector('input[type="hidden"][data-id]').dataset.id = id;
         document.getElementById('date').value = trip.date;
         document.querySelector('#country').value = trip.country;
         document.getElementById('city').value = trip.city;
         document.querySelector('#cost').value = trip.cost;
         document.querySelector('#weather').value = trip.weather;
+
+        deleteBtn.dataset.id = id;
+        deleteBtn.hidden = false;
     }
-    
+
     modal.show();
 }
 
@@ -72,6 +81,14 @@ tripForm.addEventListener('submit', function(event) {
     updateUI();
     modal.hide();
     tripForm.reset();
+});
+
+deleteBtn.addEventListener('click', function(event) {
+    if (deleteBtn.dataset.id) {
+        store.dispatch(removeTripAction(deleteBtn.dataset.id));
+    }
+    
+    modal.hide();
 });
 
 function updateUI() {
