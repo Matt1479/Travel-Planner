@@ -10,3 +10,7 @@ It's a simple web application for planning trips. It's written in JavaScript. It
 - CSS (Bootstrap 5)
 - JavaScript, AJAX
 - Redux
+
+---
+
+<img src="screenshots/0.png" alt="screenshot">
