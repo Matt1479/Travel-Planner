@@ -1,11 +1,19 @@
 .day-box {
     min-height: 100px;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d1d1;
     padding: 5px;
     cursor: pointer;
-    background-color: #f8f9fa;
+    background-color: #ececec;
 }
 
 .day-box:hover {
-    background-color: #e9ecef;
+    background-color: #e8e8e8;
+}
+
+.trip-box {
+    font-size: 0.75rem;
+}
+
+.card:hover {
+    background-color: #f7f7f7;
 }

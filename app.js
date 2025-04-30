@@ -2,6 +2,11 @@ const calendar = document.querySelector('div#calendar');
 const modal = new bootstrap.Modal(document.getElementById('tripModal'));
 const tripForm = document.querySelector('form#tripForm');
 
+document.getElementById('tripModal')
+.addEventListener('hidden.bs.modal', () => {
+    tripForm.reset();
+});
+
 function generateCalendar() {
     const date = new Date();
     const days = ["Monday", "Tuesday", "Wednesday",
@@ -27,8 +32,14 @@ function generateCalendar() {
 }
 
 function openModal(event) {
-    const date = event.currentTarget.dataset.date;
-    document.getElementById('date').value = date;
+    // Prevent the trigger of click event by the parent element
+    event.stopPropagation();
+
+    if (event.currentTarget.dataset.date) {
+        document.getElementById('date').value = event.currentTarget.dataset.date;
+    } else {
+        // ...
+    }
     
     modal.show();
 }
@@ -39,6 +50,7 @@ tripForm.addEventListener('submit', function(event) {
     event.preventDefault();
 
     const trip = {
+        id: crypto.randomUUID(),
         date: document.getElementById('date').value,
         country: document.querySelector('#country').value,
         city: document.getElementById('city').value,
@@ -54,13 +66,48 @@ tripForm.addEventListener('submit', function(event) {
 
 function updateUI() {
     const state = store.getState();
+
+    // Update total cost
     document.querySelector('span#totalCost').textContent = state.totalCost;
 
-    console.log(state.trips);
+    // Clear all trip info in calendar
+    document.querySelectorAll('div.day-box').forEach((dayBox) => {
+        const tripBoxes = dayBox.querySelectorAll('div.trip-box');
+        if (tripBoxes) {
+            tripBoxes.forEach((tripBox) => tripBox.remove());
+        }
+    });
+    
+    // Add trip info to corresponding day box
+    state.trips.forEach((trip) => {
+        const dayBox = document.querySelector(`.day-box[data-date='${trip.date}']`);
+        if (dayBox) {
+            const tripBox = document.createElement('div');
+            tripBox.className = 'row trip-box m-1';
+            tripBox.dataset.id = trip.id;
+
+            tripBox.innerHTML = `
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">${trip.city}</h6>
+                    <p>Country: ${trip.country}</p>
+                    <p>Cost: ${trip.cost}</p>
+                    <p>Date: ${trip.date}</p>
+                    <p>Weather: ${trip.weather}</p>
+                </div>
+            </div>
+            `;
+
+            tripBox.addEventListener('click', openModal);
+            dayBox.appendChild(tripBox);
+        }
+    });
 }
 
 function main() {
     generateCalendar();
+
+    store.subscribe(updateUI);
 }
 
 document.addEventListener('DOMContentLoaded', main);
