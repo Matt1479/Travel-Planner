@@ -117,7 +117,7 @@ function updateUI() {
             tripBox.dataset.id = trip.id;
 
             tripBox.innerHTML = `
-            <div class="card">
+            <div class="card" style="background-color: ${getRandomColorHex()}">
                 <div class="card-body">
                     <h6 class="card-title mb-3">${trip.city}</h6>
                     <p>Country: ${trip.country}</p>
@@ -146,6 +146,23 @@ async function getWeather(city, date, API_KEY) {
     } catch (error) {
         console.log("Error: ", error);
     }
+}
+
+function getRandomColorHex() {
+    let limit = Math.pow(2, 8);
+    let color;
+
+    do {
+        color = {
+            r: Math.floor(Math.random() * limit),
+            g: Math.floor(Math.random() * limit),
+            b: Math.floor(Math.random() * limit),
+        }
+    }
+    while (color.r < (limit / 2) || color.g < (limit / 2)
+    || color.b < (limit / 2));
+
+    return `#${color.r.toString(16)}${color.g.toString(16)}${color.b.toString(16)}`;
 }
 
 document.querySelector('#city').addEventListener('keyup', (event) => {

@@ -3,7 +3,8 @@
     border: 1px solid #d1d1d1;
     padding: 5px;
     cursor: pointer;
-    background-color: #ececec;
+    background-color: #ededea;
+    border-radius: 5px;
 }
 
 .day-box:hover {
