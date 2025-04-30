@@ -1,0 +1,11 @@
+.day-box {
+    min-height: 100px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+.day-box:hover {
+    background-color: #e9ecef;
+}
