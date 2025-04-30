@@ -6,11 +6,22 @@ const initialState = {
 function tripReducer(state=initialState, action) {
     switch (action.type) {
         case ADD_TRIP:
-            const newTrips = [...state.trips, action.payload];
-            const newCost = newTrips.reduce((sum, trip) => sum + trip.cost, 0);
+            // Replace trip with the same id if it exists
+            const existingIndex = state.trips.findIndex((trip) => trip.id === action.payload.id);
+            let updatedTrips;
+
+            if (existingIndex !== -1) {
+                updatedTrips = [...state.trips];
+                updatedTrips[existingIndex] = action.payload;
+            } else {
+                updatedTrips = [...state.trips, action.payload];
+            }
+            
+            const totalCost = updatedTrips.reduce((sum, trip) => sum + trip.cost, 0);
+            
             return {
-                trips: newTrips,
-                totalCost: newCost
+                trips: updatedTrips,
+                totalCost: totalCost
             };
         
         default:
