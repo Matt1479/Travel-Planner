@@ -13,4 +13,4 @@ It's a simple web application for planning trips. It's written in JavaScript. It
 
 ---
 
-[Screenshot](screenshots/0.png)
+<img src="screenshots/0.png" alt="screenshot">
