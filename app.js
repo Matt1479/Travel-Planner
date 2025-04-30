@@ -3,8 +3,13 @@ const modal = new bootstrap.Modal(document.getElementById('tripModal'));
 const tripForm = document.querySelector('form#tripForm');
 const deleteBtn = document.querySelector('button#delete');
 
+const API_KEY = 'YOUR_API_KEY';
+const TIME_WAIT = 1000;
+let timeoutId = null;
+
 document.getElementById('tripModal')
 .addEventListener('hidden.bs.modal', () => {
+    document.querySelector('label[for="weather"]').innerText = 'Weather';
     tripForm.reset();
 });
 
@@ -30,8 +35,6 @@ function generateCalendar() {
         div.addEventListener('click', openModal);
         calendar.appendChild(div);
     }
-
-    updateUI();
 }
 
 function openModal(event) {
@@ -87,7 +90,7 @@ deleteBtn.addEventListener('click', function(event) {
     if (deleteBtn.dataset.id) {
         store.dispatch(removeTripAction(deleteBtn.dataset.id));
     }
-    
+
     modal.hide();
 });
 
@@ -131,8 +134,53 @@ function updateUI() {
     });
 }
 
-function main() {
+async function getWeather(city, date, API_KEY) {
+    try {
+        const response = await fetch(
+            `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q="${city}"&dt="${date}"`
+        );
+        const json_response = await response.json();
+        
+        // return json_response['forecast']['forecastday'][0]['day']['condition'];
+        return json_response?.forecast?.forecastday?.at(0)?.day?.condition;
+    } catch (error) {
+        console.log("Error: ", error);
+    }
+}
+
+document.querySelector('#city').addEventListener('keyup', (event) => {
+    const country = document.querySelector('#country').value;
+        const city = document.querySelector('#city').value;
+        const cost = document.querySelector('#cost').value;
+        const date = document.querySelector('#date').value;
+
+        if (country && city && cost && date) {
+            if (timeoutId) {
+                window.clearTimeout(timeoutId);
+                timeoutId = null;
+            } else {
+                // After 1 second...
+                timeoutId = window.setTimeout(async () => {
+                    // Get weather
+                    const weather = await getWeather(city, date, API_KEY);  
+
+                    if (weather) {
+                        document.querySelector('label[for="weather"]').innerHTML = `
+                        Weather: <img src=${weather.icon} width="40">
+                        `;
+
+                        // Fill with data
+                        const weatherInput = document.querySelector('#weather');
+                        weatherInput.value = weather.text;
+                    }
+                }, TIME_WAIT);
+            }
+    }
+});
+
+async function main() {
     generateCalendar();
+    updateUI();
 
     store.subscribe(updateUI);
 }

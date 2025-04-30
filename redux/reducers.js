@@ -3,6 +3,83 @@ const initialState = {
     totalCost: 0
 };
 
+// Adds some starter trips
+const date = new Date();
+let initialTrips = [
+    {
+        country: 'United Kingdom',
+        city: 'London',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(1).padStart(2, '0')}`,
+        weather: 'Cloudy'
+    },
+    {
+        country: 'Italy',
+        city: 'Rome',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(2).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+    {
+        country: 'Spain',
+        city: 'Madrid',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(3).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+    {
+        country: 'Morocco',
+        city: 'Rabat',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(3).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+    {
+        country: 'Czech Republic',
+        city: 'Prague',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(4).padStart(2, '0')}`,
+        weather: 'Windy'
+    },
+    {
+        country: 'Thailand',
+        city: 'Bangkok',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(5).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+    {
+        country: 'Egypt',
+        city: 'Cairo',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(5).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+    {
+        country: 'Japan',
+        city: 'Tokyo',
+        date: `${date.getFullYear()}`
+        + `-${String(date.getMonth()).padStart(2, '0')}`
+        + `-${String(6).padStart(2, '0')}`,
+        weather: 'Sunny'
+    },
+];
+initialTrips = initialTrips.map((t, index) => {
+    t.id = crypto.randomUUID();
+    t.cost = 100 + Math.floor(Math.random() * 500) + index * 50;
+
+    return t;
+});
+initialState.trips = [...initialTrips];
+initialState.totalCost = initialTrips.reduce((sum, trip) => sum + trip.cost, 0);
+
 function tripReducer(state=initialState, action) {
     switch (action.type) {
         case ADD_TRIP:
